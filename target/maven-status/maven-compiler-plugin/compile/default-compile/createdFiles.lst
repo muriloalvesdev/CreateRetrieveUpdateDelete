@@ -1,0 +1,10 @@
+br/com/crud/domain/repository/PersonRepository.class
+br/com/crud/dto/PersonDataTransferObject.class
+br/com/crud/service/PersonService.class
+br/com/crud/service/exception/PersonException.class
+br/com/crud/service/PersonServiceImpl.class
+br/com/crud/service/convert/PersonConvert.class
+br/com/crud/domain/model/BaseEntity.class
+br/com/crud/CreateReadUpdateApplication.class
+br/com/crud/domain/model/Person.class
+br/com/crud/controller/PersonController.class
