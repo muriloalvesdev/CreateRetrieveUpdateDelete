@@ -13,6 +13,18 @@ public class PersonDataTransferObject {
     @JsonProperty("birth_date")
     private String birthDate;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
     public String getFirstName() {
         return firstName;
     }
