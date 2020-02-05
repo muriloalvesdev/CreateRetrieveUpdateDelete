@@ -48,7 +48,8 @@ public class PersonController {
     }
 
     @DeleteMapping("delete/{uuid}")
-    public ResponseEntity<Void> delete(@RequestParam String uuid) {
+    public ResponseEntity<Void> delete(
+            @PathVariable(name = "uuid") String uuid) {
         personService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
