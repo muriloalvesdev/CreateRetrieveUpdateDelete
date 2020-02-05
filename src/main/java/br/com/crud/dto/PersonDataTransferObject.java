@@ -4,50 +4,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PersonDataTransferObject {
 
-    @JsonProperty("first_name")
-    private String firstName;
-
-    @JsonProperty("last_name")
-    private String lastName;
+    @JsonProperty("full_name")
+    private String fullName;
 
     @JsonProperty("birth_date")
     private String birthDate;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public PersonDataTransferObject(String fullName, String birthDate) {
+        this.birthDate = birthDate;
+        this.fullName = fullName;
     }
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
     public String getBirthDate() {
         return birthDate;
     }
 
-    public PersonDataTransferObject(String firstName, String lastName,
-            String birthDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     @Override
     public String toString() {
-        return "PersonDataTransferObject [firstName=" + firstName
-                + ", lastName=" + lastName + ", birthDate=" + birthDate + "]";
+        return "PersonDataTransferObject [fullName=" + fullName + ", birthDate="
+                + birthDate + "]";
     }
 
 }

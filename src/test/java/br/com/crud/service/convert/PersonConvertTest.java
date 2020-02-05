@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
-import br.com.crud.service.exception.PersonException;
+import br.com.crud.service.exception.PersonNotFoundException;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -26,26 +27,36 @@ public class PersonConvertTest {
     @Test
     public void shouldConvertDataTransferObjectToEntity() {
         PersonDataTransferObject personDTO = new PersonDataTransferObject(
-                "Murilo", "Alves", LocalDate.parse("1995-01-21").toString());
+                "Murilo Alves", LocalDate.parse("1995-01-21").toString());
 
         Person person = PersonConvert.convert(personDTO);
 
-        assertEquals("Murilo", person.getFirstName());
-        assertEquals("Alves", person.getLastName());
+        assertEquals("Murilo Alves", person.getFullName());
         assertEquals("1995-01-21", person.getBirthDate().toString());
     }
 
+    @Test(expected = PersonNotFoundException.class)
+    public void shouldReturnPersonException() throws PersonNotFoundException {
+        Optional<Person> optionalPerson = personRepository.findById(
+                UUID.fromString("5f7f2841-82bc-4536-8a49-0cf2cd59d64f"));
+
+        PersonConvert.convertOptional(optionalPerson);
+    }
+
     @Test
-    public void shouldConvertOptionalPersonToPerson() throws PersonException {
+    public void shouldConvertOptionalPersonToPerson()
+            throws PersonNotFoundException {
+
+        // cria uma pessoa no banco de dados
         Person person = persistPerson();
 
+        // busca essa pessoa pelo uuid/id
         Optional<Person> optionalPerson = personRepository
                 .findById(person.getUuid());
 
         Person personConverted = PersonConvert.convertOptional(optionalPerson);
 
-        assertEquals("Murilo", personConverted.getFirstName());
-        assertEquals("Alves", personConverted.getLastName());
+        assertEquals("Murilo Alves", personConverted.getFullName());
         assertEquals("1995-01-21", personConverted.getBirthDate().toString());
         assertEquals(person.getUuid(), personConverted.getUuid());
 
@@ -60,8 +71,7 @@ public class PersonConvertTest {
         PersonDataTransferObject personDataTransferObject = PersonConvert
                 .convertToPatternDTO(person);
 
-        assertEquals("Murilo", personDataTransferObject.getFirstName());
-        assertEquals("Alves", personDataTransferObject.getLastName());
+        assertEquals("Murilo Alves", personDataTransferObject.getFullName());
         assertEquals("1995-01-21",
                 personDataTransferObject.getBirthDate().toString());
 
@@ -70,7 +80,7 @@ public class PersonConvertTest {
 
     private Person persistPerson() {
         PersonDataTransferObject personDTO = new PersonDataTransferObject(
-                "Murilo", "Alves", LocalDate.parse("1995-01-21").toString());
+                "Murilo Alves", LocalDate.parse("1995-01-21").toString());
 
         Person person = PersonConvert.convert(personDTO);
         return personRepository.saveAndFlush(person);

@@ -20,39 +20,27 @@ public class Person extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uuid;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
     @SuppressWarnings("unused")
-    private Person() {
+    private Person() {  
     }
 
-    public Person(String firstName, String lastName, LocalDate birthDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Person(LocalDate birthDate, String fullName) {
+        this.fullName = fullName;
         this.birthDate = birthDate;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getFullName() {
+        return fullName;
     }
 
     public LocalDate getBirthDate() {

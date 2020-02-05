@@ -67,9 +67,10 @@ public class PersonServiceImpl implements PersonService {
             Optional<Person> optionalPerson = getOptionalPerson(uuid);
 
             Person person = PersonConvert.convertOptional(optionalPerson);
+
             person.setBirthDate(LocalDate.parse(personDTO.getBirthDate()));
-            person.setFirstName(personDTO.getFirstName());
-            person.setLastName(personDTO.getLastName());
+            person.setFullName(personDTO.getFullName());
+
             personRepository.save(person);
         } catch (Exception e) {
             LOG.error("UUID [" + uuid + "] informed not found, error: "
@@ -84,8 +85,7 @@ public class PersonServiceImpl implements PersonService {
 
         personRepository.findAll().stream().forEach(person -> {
             PersonDataTransferObject personDataTransferObject = new PersonDataTransferObject(
-                    person.getFirstName(), person.getLastName(),
-                    person.getBirthDate().toString());
+                    person.getFullName(), person.getBirthDate().toString());
 
             personsDTO.add(personDataTransferObject);
         });

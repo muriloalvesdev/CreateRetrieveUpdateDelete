@@ -56,22 +56,16 @@ public class PersonServiceTest {
     @Test
     public void shouldUpdatePersonByPersonDTOAndUUID() {
         Person person = persistPerson();
+        person.setFullName("Murilo Batista");
 
         PersonDataTransferObject personDTO = PersonConvert
                 .convertToPatternDTO(person);
-
-        personDTO.setFirstName("Murilo");
-        personDTO.setLastName("Batista");
-
-        person.setFirstName(personDTO.getFirstName());
-        person.setLastName(personDTO.getLastName());
 
         personService.update(person.getUuid().toString(), personDTO);
 
         Person personUpdate = personRepository.findById(person.getUuid()).get();
 
-        assertEquals("Murilo", personUpdate.getFirstName());
-        assertEquals("Batista", personUpdate.getLastName());
+        assertEquals("Murilo Batista", personUpdate.getFullName());
 
         personRepository.deleteAll();
     }
@@ -85,8 +79,7 @@ public class PersonServiceTest {
 
         assertEquals(person.getBirthDate().toString(),
                 personDTO.getBirthDate());
-        assertEquals(person.getFirstName(), personDTO.getFirstName());
-        assertEquals(person.getLastName(), personDTO.getLastName());
+        assertEquals(person.getFullName(), personDTO.getFullName());
 
         personRepository.deleteAll();
     }
@@ -102,10 +95,8 @@ public class PersonServiceTest {
 
         Person person = personRepository.findAll().get(0);
 
-        assertEquals(personDataTransferObject.getFirstName(),
-                person.getFirstName());
-        assertEquals(personDataTransferObject.getLastName(),
-                person.getLastName());
+        assertEquals(personDataTransferObject.getFullName(),
+                person.getFullName());
         assertEquals(personDataTransferObject.getBirthDate(),
                 person.getBirthDate().toString());
 
@@ -113,13 +104,13 @@ public class PersonServiceTest {
     }
 
     private PersonDataTransferObject createObjectPersonDTO() {
-        return new PersonDataTransferObject("Murilo", "Alves",
+        return new PersonDataTransferObject("Murilo Alves",
                 LocalDate.parse("2019-01-21").toString());
     }
 
     private Person persistPerson() {
         PersonDataTransferObject personDTO = new PersonDataTransferObject(
-                "Murilo", "Alves", LocalDate.parse("1995-01-21").toString());
+                "Murilo Alves", LocalDate.parse("1995-01-21").toString());
 
         Person person = PersonConvert.convert(personDTO);
         return personRepository.saveAndFlush(person);

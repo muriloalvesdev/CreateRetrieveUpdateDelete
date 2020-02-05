@@ -5,24 +5,24 @@ import java.util.Optional;
 
 import br.com.crud.domain.model.Person;
 import br.com.crud.dto.PersonDataTransferObject;
-import br.com.crud.service.exception.PersonException;
+import br.com.crud.service.exception.PersonNotFoundException;
 
 public final class PersonConvert {
 
     public static Person convert(PersonDataTransferObject personDTO) {
-        return new Person(personDTO.getFirstName(), personDTO.getLastName(),
-                LocalDate.parse(personDTO.getBirthDate()));
+        return new Person(LocalDate.parse(personDTO.getBirthDate()),
+                personDTO.getFullName());
     }
 
     public static Person convertOptional(Optional<Person> optionalPerson)
-            throws PersonException {
+            throws PersonNotFoundException {
         return optionalPerson
-                .orElseThrow(() -> new PersonException("Person not found!"));
+                .orElseThrow(() -> new PersonNotFoundException("Person not found!"));
     }
 
     public static PersonDataTransferObject convertToPatternDTO(Person person) {
-        return new PersonDataTransferObject(person.getFirstName(),
-                person.getLastName(), person.getBirthDate().toString());
+        return new PersonDataTransferObject(person.getFullName(),
+                person.getBirthDate().toString());
     }
 
 }
