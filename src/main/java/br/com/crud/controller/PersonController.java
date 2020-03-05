@@ -3,6 +3,7 @@ package br.com.crud.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class PersonController {
 
   @PostMapping("save")
   public ResponseEntity<PersonDataTransferObject> save(
-      @RequestBody PersonDataTransferObject personDTO) {
+      @Validated @RequestBody PersonDataTransferObject personDTO) {
     personService.save(personDTO);
     return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
         .path("/api/person/find/{identifier}").buildAndExpand(personDTO.getIdentifier()).toUri())
@@ -53,9 +54,8 @@ public class PersonController {
   @PutMapping("update/{identifier}")
   public ResponseEntity<Void> update(
       @PathVariable(name = "identifier", required = true) String uuid,
-      @RequestBody PersonDataTransferObject personDTO) {
+      @Validated @RequestBody PersonDataTransferObject personDTO) {
     personService.update(uuid, personDTO);
     return ResponseEntity.noContent().build();
   }
-
 }
