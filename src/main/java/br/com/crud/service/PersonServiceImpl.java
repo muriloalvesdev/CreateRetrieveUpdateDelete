@@ -56,7 +56,7 @@ public class PersonServiceImpl implements PersonService {
 
       personRepository.delete(person);
     } catch (Exception e) {
-      LOG.error("FULL-NAME [" + identifier + "] informed not found, error: " + e.getMessage(), e);
+      LOG.error("IDENTIFIER [" + identifier + "] informed not found, error: " + e.getMessage(), e);
     }
   }
 
@@ -72,7 +72,7 @@ public class PersonServiceImpl implements PersonService {
 
       personRepository.save(person);
     } catch (PersonNotFoundException e) {
-      LOG.error("UUID [" + identifier + "] informed not found, error: " + e.getMessage(), e);
+      LOG.error("IDENTIFIER [" + identifier + "] informed not found, error: " + e.getMessage(), e);
     }
 
   }
