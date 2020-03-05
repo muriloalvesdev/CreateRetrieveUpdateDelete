@@ -19,101 +19,96 @@ import br.com.crud.service.convert.PersonConvert;
 @RunWith(SpringRunner.class)
 public class PersonServiceTest {
 
-    @Autowired
-    private PersonService personService;
+  @Autowired
+  private PersonService personService;
 
-    @Autowired
-    private PersonRepository personRepository;
+  @Autowired
+  private PersonRepository personRepository;
 
-    @Test
-    public void shouldFindAll() {
-        assertEquals(0, personRepository.findAll().size());
+  @Test
+  public void shouldFindAll() {
+    assertEquals(0, personRepository.findAll().size());
 
-        persistPerson();
-        persistPerson();
+    persistPerson();
+    persistPerson();
 
-        assertEquals(2, personRepository.findAll().size());
-        assertEquals(2, personService.findAll().size());
+    assertEquals(2, personRepository.findAll().size());
+    assertEquals(2, personService.findAll().size());
 
-        personRepository.deleteAll();
-    }
+    personRepository.deleteAll();
+  }
 
-    @Test
-    public void shouldDelete() {
-        assertEquals(0, personRepository.findAll().size());
+  @Test
+  public void shouldDelete() {
+    assertEquals(0, personRepository.findAll().size());
 
-        Person person = persistPerson();
+    Person person = persistPerson();
 
-        assertEquals(1, personRepository.findAll().size());
+    assertEquals(1, personRepository.findAll().size());
 
-        personService.delete(person.getUuid().toString());
+    personService.delete(person.getUuid().toString());
 
-        assertEquals(0, personRepository.findAll().size());
+    assertEquals(0, personRepository.findAll().size());
 
-        personRepository.deleteAll();
-    }
+    personRepository.deleteAll();
+  }
 
-    @Test
-    public void shouldUpdatePersonByPersonDTOAndUUID() {
-        Person person = persistPerson();
-        person.setFullName("Murilo Batista");
+  @Test
+  public void shouldUpdatePersonByPersonDTOAndUUID() {
+    Person person = persistPerson();
+    person.setFullName("Murilo Batista");
 
-        PersonDataTransferObject personDTO = PersonConvert
-                .convertToPatternDTO(person);
+    PersonDataTransferObject personDTO = PersonConvert.convertToPatternDTO(person);
 
-        personService.update(person.getUuid().toString(), personDTO);
+    personService.update(person.getUuid().toString(), personDTO);
 
-        Person personUpdate = personRepository.findById(person.getUuid()).get();
+    Person personUpdate = personRepository.findById(person.getUuid()).get();
 
-        assertEquals("Murilo Batista", personUpdate.getFullName());
+    assertEquals("Murilo Batista", personUpdate.getFullName());
 
-        personRepository.deleteAll();
-    }
+    personRepository.deleteAll();
+  }
 
-    @Test
-    public void shouldFindPersonByUUID() {
-        Person person = persistPerson();
+  @Test
+  public void shouldFindPersonByUUID() {
+    Person person = persistPerson();
 
-        PersonDataTransferObject personDTO = personService
-                .find(person.getUuid().toString());
+    PersonDataTransferObject personDTO = personService.find(person.getUuid().toString());
 
-        assertEquals(person.getBirthDate().toString(),
-                personDTO.getBirthDate());
-        assertEquals(person.getFullName(), personDTO.getFullName());
+    assertEquals(person.getBirthDate().toString(), personDTO.getBirthDate());
+    assertEquals(person.getFullName(), personDTO.getFullName());
 
-        personRepository.deleteAll();
-    }
+    personRepository.deleteAll();
+  }
 
-    @Test
-    public void shouldSavePerson() {
-        assertEquals(0, personRepository.findAll().size());
+  @Test
+  public void shouldSavePerson() {
+    assertEquals(0, personRepository.findAll().size());
 
-        PersonDataTransferObject personDataTransferObject = createObjectPersonDTO();
-        personService.save(personDataTransferObject);
+    PersonDataTransferObject personDataTransferObject = createObjectPersonDTO();
+    personService.save(personDataTransferObject);
 
-        assertEquals(1, personRepository.findAll().size());
+    assertEquals(1, personRepository.findAll().size());
 
-        Person person = personRepository.findAll().get(0);
+    Person person = personRepository.findAll().get(0);
 
-        assertEquals(personDataTransferObject.getFullName(),
-                person.getFullName());
-        assertEquals(personDataTransferObject.getBirthDate(),
-                person.getBirthDate().toString());
+    assertEquals(personDataTransferObject.getFullName(), person.getFullName());
+    assertEquals(personDataTransferObject.getBirthDate(), person.getBirthDate().toString());
 
-        personRepository.deleteAll();
-    }
+    personRepository.deleteAll();
+  }
 
-    private PersonDataTransferObject createObjectPersonDTO() {
-        return new PersonDataTransferObject("Murilo Alves",
-                LocalDate.parse("2019-01-21").toString());
-    }
+  private PersonDataTransferObject createObjectPersonDTO() {
+    return new PersonDataTransferObject("Murilo Alves", LocalDate.parse("2019-01-21").toString(),
+        "88822");
+  }
 
-    private Person persistPerson() {
-        PersonDataTransferObject personDTO = new PersonDataTransferObject(
-                "Murilo Alves", LocalDate.parse("1995-01-21").toString());
+  private Person persistPerson() {
+    PersonDataTransferObject personDTO = new PersonDataTransferObject("Murilo Alves",
+        LocalDate.parse("1995-01-21").toString(), "88822");
 
-        Person person = PersonConvert.convert(personDTO);
-        return personRepository.saveAndFlush(person);
-    }
+    Person person = PersonConvert.convert(personDTO);
+    return personRepository.saveAndFlush(person);
+  }
 
 }
