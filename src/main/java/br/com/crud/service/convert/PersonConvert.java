@@ -9,20 +9,19 @@ import br.com.crud.service.exception.PersonNotFoundException;
 
 public final class PersonConvert {
 
-    public static Person convert(PersonDataTransferObject personDTO) {
-        return new Person(LocalDate.parse(personDTO.getBirthDate()),
-                personDTO.getFullName());
-    }
+  public static Person convert(PersonDataTransferObject personDTO) {
+    return new Person(personDTO.getFullName(), personDTO.getIdentifier(),
+        LocalDate.parse(personDTO.getBirthDate()));
+  }
 
-    public static Person convertOptional(Optional<Person> optionalPerson)
-            throws PersonNotFoundException {
-        return optionalPerson
-                .orElseThrow(() -> new PersonNotFoundException("Person not found!"));
-    }
+  public static Person convertOptional(Optional<Person> optionalPerson)
+      throws PersonNotFoundException {
+    return optionalPerson.orElseThrow(() -> new PersonNotFoundException("Person not found!"));
+  }
 
-    public static PersonDataTransferObject convertToPatternDTO(Person person) {
-        return new PersonDataTransferObject(person.getFullName(),
-                person.getBirthDate().toString());
-    }
+  public static PersonDataTransferObject convertToPatternDTO(Person person) {
+    return new PersonDataTransferObject(person.getFullName(), person.getBirthDate().toString(),
+        person.getIdentifier());
+  }
 
 }
