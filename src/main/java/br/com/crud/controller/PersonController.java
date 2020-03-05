@@ -45,13 +45,14 @@ public class PersonController {
   }
 
   @DeleteMapping("delete/{identifier}")
-  public ResponseEntity<Void> delete(@PathVariable(name = "uuid") String uuid) {
+  public ResponseEntity<Void> delete(@PathVariable(name = "identifier") String uuid) {
     personService.delete(uuid);
     return ResponseEntity.noContent().build();
   }
 
   @PutMapping("update/{identifier}")
-  public ResponseEntity<Void> update(@PathVariable(name = "uuid", required = true) String uuid,
+  public ResponseEntity<Void> update(
+      @PathVariable(name = "identifier", required = true) String uuid,
       @RequestBody PersonDataTransferObject personDTO) {
     personService.update(uuid, personDTO);
     return ResponseEntity.noContent().build();
