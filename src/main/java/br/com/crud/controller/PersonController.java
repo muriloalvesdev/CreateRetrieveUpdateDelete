@@ -27,6 +27,7 @@ public class PersonController {
   @PostMapping("save")
   public ResponseEntity<PersonDataTransferObject> save(
       @RequestBody PersonDataTransferObject personDTO) {
+    personService.save(personDTO);
     return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
         .path("/api/person/find/{identifier}").buildAndExpand(personDTO.getIdentifier()).toUri())
         .build();
