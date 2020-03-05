@@ -11,6 +11,7 @@ import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
 import br.com.crud.service.convert.PersonConvert;
+import br.com.crud.service.exception.PersonConflictException;
 import br.com.crud.service.exception.PersonNotFoundException;
 
 @Service
@@ -22,11 +23,14 @@ public class PersonServiceImpl implements PersonService {
   private PersonRepository personRepository;
 
   @Override
-  public Person save(PersonDataTransferObject personDTO) {
-
-    Person person = PersonConvert.convert(personDTO);
-
-    return personRepository.save(person);
+  public PersonDataTransferObject save(PersonDataTransferObject personDTO) {
+    try {
+      Person person = PersonConvert.convert(personDTO);
+      personRepository.saveAndFlush(person);
+    } catch (PersonConflictException e) {
+      LOG.error("Error persist personDTO, error: " + e.getMessage());
+    }
+    return personDTO;
   }
 
   @Override

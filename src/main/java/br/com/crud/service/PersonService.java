@@ -1,12 +1,10 @@
 package br.com.crud.service;
 
 import java.util.List;
-
-import br.com.crud.domain.model.Person;
 import br.com.crud.dto.PersonDataTransferObject;
 
 public interface PersonService {
-    Person save(PersonDataTransferObject personDTO);
+  PersonDataTransferObject save(PersonDataTransferObject personDTO);
 
     PersonDataTransferObject find(String uuid);
 
