@@ -1,7 +1,8 @@
 package br.com.crud.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,8 +42,8 @@ public class PersonController {
   }
 
   @GetMapping("find")
-  public ResponseEntity<List<PersonDataTransferObject>> findAll() {
-    return ResponseEntity.ok(personService.findAll());
+  public ResponseEntity<Page<PersonDataTransferObject>> findAll(Pageable pageable) {
+    return ResponseEntity.ok(personService.findAll(pageable));
   }
 
   @DeleteMapping("delete/{identifier}")

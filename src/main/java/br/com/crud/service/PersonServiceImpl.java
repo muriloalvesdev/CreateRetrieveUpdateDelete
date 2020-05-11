@@ -1,9 +1,9 @@
 package br.com.crud.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
@@ -58,17 +58,9 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public List<PersonDataTransferObject> findAll() {
-    List<PersonDataTransferObject> personsDTO = new ArrayList<>();
-
-    personRepository.findAll().stream().forEach(person -> {
-      PersonDataTransferObject personDataTransferObject = new PersonDataTransferObject(
-          person.getFullName(), person.getBirthDate().toString(), person.getIdentifier());
-
-      personsDTO.add(personDataTransferObject);
-    });
-
-    return personsDTO;
+  public Page<PersonDataTransferObject> findAll(Pageable pageable) {
+    return personRepository.findAll(pageable)
+        .map(person -> PersonConvert.convertToPatternDTO(person));
   }
 
   private Optional<Person> getOptionalPersonByIdentifier(String identifier) {

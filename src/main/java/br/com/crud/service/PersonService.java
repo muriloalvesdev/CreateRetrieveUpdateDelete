@@ -1,6 +1,7 @@
 package br.com.crud.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import br.com.crud.dto.PersonDataTransferObject;
 
 public interface PersonService {
@@ -12,5 +13,5 @@ public interface PersonService {
 
   void update(String uuid, PersonDataTransferObject personDTO);
 
-  List<PersonDataTransferObject> findAll();
+  Page<PersonDataTransferObject> findAll(Pageable pageable);
 }
