@@ -1,15 +1,14 @@
 package br.com.crud.service;
 
 import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDate;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
@@ -25,15 +24,22 @@ public class PersonServiceTest {
   @Autowired
   private PersonRepository personRepository;
 
+  private PageRequest pageRequest;
+
+  @Before
+  public void beforeCreatePageRequest() {
+    pageRequest = PageRequest.of(0, 5);
+  }
+
   @Test
   public void shouldFindAll() {
-    assertEquals(0, personRepository.findAll().size());
+    assertEquals(0, personRepository.findAll(pageRequest).getContent().size());
 
     persistPerson();
     persistPerson();
 
-    assertEquals(2, personRepository.findAll().size());
-    assertEquals(2, personService.findAll().size());
+    assertEquals(2, personRepository.findAll(pageRequest).getContent().size());
+    assertEquals(2, personService.findAll(pageRequest).getContent().size());
 
     personRepository.deleteAll();
   }
