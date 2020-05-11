@@ -6,11 +6,11 @@ import br.com.crud.dto.PersonDataTransferObject;
 public interface PersonService {
   PersonDataTransferObject save(PersonDataTransferObject personDTO);
 
-    PersonDataTransferObject find(String uuid);
+  PersonDataTransferObject find(String uuid);
 
-    void delete(String uuid);
+  void delete(String uuid);
 
-    void update(String uuid, PersonDataTransferObject personDTO);
+  void update(String uuid, PersonDataTransferObject personDTO);
 
-    List<PersonDataTransferObject> findAll();
+  List<PersonDataTransferObject> findAll();
 }

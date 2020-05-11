@@ -31,7 +31,7 @@ public class Person extends BaseEntity {
 
   @SuppressWarnings("unused")
   private Person() {}
- 
+
   public Person(String fullName, String identifier, LocalDate birthDate) {
     this.fullName = fullName;
     this.identifier = identifier;

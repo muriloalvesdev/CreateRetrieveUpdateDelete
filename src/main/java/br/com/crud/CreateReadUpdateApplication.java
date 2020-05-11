@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CreateReadUpdateApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CreateReadUpdateApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(CreateReadUpdateApplication.class, args);
+  }
 
 }
