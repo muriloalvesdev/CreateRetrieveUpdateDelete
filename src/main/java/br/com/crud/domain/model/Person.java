@@ -9,7 +9,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder(builderMethodName = "newBuilder")
 @Entity
 @Table(name = "person", uniqueConstraints = {@UniqueConstraint(columnNames = {"identifier"})})
 public class Person extends BaseEntity {
@@ -28,42 +39,5 @@ public class Person extends BaseEntity {
 
   @Column(name = "birth_date")
   private LocalDate birthDate;
-
-  @SuppressWarnings("unused")
-  private Person() {}
-
-  public Person(String fullName, String identifier, LocalDate birthDate) {
-    this.fullName = fullName;
-    this.identifier = identifier;
-    this.birthDate = birthDate;
-  }
-
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public LocalDate getBirthDate() {
-    return birthDate;
-  }
-
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
-  }
-
-  public UUID getUuid() {
-    return uuid;
-  }
 
 }
