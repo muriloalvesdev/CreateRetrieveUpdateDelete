@@ -2,7 +2,18 @@ package br.com.crud.dto;
 
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Builder(builderMethodName = "newBuilder")
 public class PersonDataTransferObject {
 
   @JsonProperty("full_name")
@@ -16,42 +27,5 @@ public class PersonDataTransferObject {
   @JsonProperty("identifier")
   @NotNull
   private String identifier;
-
-  public PersonDataTransferObject(@NotNull String fullName, @NotNull String birthDate,
-      @NotNull String identifier) {
-    this.fullName = fullName;
-    this.birthDate = birthDate;
-    this.identifier = identifier;
-  }
-
-  public void setBirthDate(String birthDate) {
-    this.birthDate = birthDate;
-  }
-
-  public String getBirthDate() {
-    return birthDate;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
-
-  @Override
-  public String toString() {
-    return "PersonDataTransferObject [fullName=" + fullName + ", birthDate=" + birthDate + "]";
-  }
 
 }
