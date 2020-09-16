@@ -10,9 +10,9 @@ public final class PersonConvert {
 
   private PersonConvert() {}
 
-  public static Person convert(PersonDataTransferObject personDTO) {
-    return new Person(personDTO.getFullName(), personDTO.getIdentifier(),
-        LocalDate.parse(personDTO.getBirthDate()));
+  public static Person convert(PersonDataTransferObject dto) {
+    return Person.newBuilder().fullName(dto.getFullName()).identifier(dto.getIdentifier())
+        .birthDate(LocalDate.parse(dto.getBirthDate())).build();
   }
 
   public static Person convertOptional(Optional<Person> optionalPerson)
@@ -21,8 +21,8 @@ public final class PersonConvert {
   }
 
   public static PersonDataTransferObject convertToPatternDTO(Person person) {
-    return new PersonDataTransferObject(person.getFullName(), person.getBirthDate().toString(),
-        person.getIdentifier());
+    return PersonDataTransferObject.newBuilder().birthDate(person.getBirthDate().toString())
+        .fullName(person.getFullName()).identifier(person.getIdentifier()).build();
   }
 
 }
