@@ -31,6 +31,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
@@ -52,7 +58,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -69,7 +74,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 
 	<build>
 		<finalName>crud</finalName>
@@ -102,26 +106,25 @@
 
 	<profiles>
 		<profile>
-			<id>test</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			<id>dev</id>
 			<properties>
-				<CreateReadUpdate.profile>test</CreateReadUpdate.profile>
+				<activatedProperties>dev</activatedProperties>
 			</properties>
 		</profile>
 		<profile>
-			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<id>test</id>
 			<properties>
-				<CreateReadUpdate.profile>dev</CreateReadUpdate.profile>
+				<activatedProperties>test</activatedProperties>
 			</properties>
 		</profile>
 		<profile>
 			<id>prod</id>
 			<properties>
-				<CreateReadUpdate.profile>prod</CreateReadUpdate.profile>
+				<activatedProperties>prod</activatedProperties>
 			</properties>
 		</profile>
 	</profiles>
-
 </project>
