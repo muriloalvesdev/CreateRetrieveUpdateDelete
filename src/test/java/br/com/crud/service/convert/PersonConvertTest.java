@@ -1,85 +1,61 @@
 package br.com.crud.service.convert;
 
 import static org.junit.Assert.assertEquals;
-
-import java.time.LocalDate;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import br.com.crud.domain.model.Person;
-import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
+import br.com.crud.providers.PersonConstants;
+import br.com.crud.providers.PersonDTOProviderTests;
+import br.com.crud.providers.PersonEntityProviderTests;
 import br.com.crud.service.exception.PersonNotFoundException;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class PersonConvertTest {
+class PersonConvertTest implements PersonConstants {
 
-  @Autowired
-  private PersonRepository personRepository;
-
-  @Test
-  public void shouldConvertDataTransferObjectToEntity() {
-    PersonDataTransferObject personDTO = new PersonDataTransferObject("Murilo Alves",
-        LocalDate.parse("1995-01-21").toString(), "88822");
-
+  @ParameterizedTest
+  @ArgumentsSource(PersonDTOProviderTests.class)
+  void shouldConvertDataTransferObjectToEntity(PersonDataTransferObject personDTO) {
     Person person = PersonConvert.convert(personDTO);
 
-    assertEquals("Murilo Alves", person.getFullName());
-    assertEquals("1995-01-21", person.getBirthDate().toString());
-  }
-
-  @Test(expected = PersonNotFoundException.class)
-  public void shouldReturnPersonException() throws PersonNotFoundException {
-    Optional<Person> optionalPerson =
-        personRepository.findById(UUID.fromString("5f7f2841-82bc-4536-8a49-0cf2cd59d64f"));
-
-    PersonConvert.convertOptional(optionalPerson);
+    asserts(person.getFullName(), person.getBirthDate().toString(), person.getIdentifier());
   }
 
   @Test
-  public void shouldConvertOptionalPersonToPerson() throws PersonNotFoundException {
+  void shouldReturnPersonNotFoundException() throws PersonNotFoundException {
+    Exception exception = assertThrows(PersonNotFoundException.class, () -> {
+      PersonConvert.convertOptional(Optional.empty());
+    });
+    assertTrue(exception instanceof PersonNotFoundException);
+    assertEquals(PersonConvert.MESSAGE_NOT_FOUND_EXCEPTION, exception.getMessage());
+  }
 
-    // cria uma pessoa no banco de dados
-    Person person = persistPerson();
-
-    // busca essa pessoa pelo uuid/id
-    Optional<Person> optionalPerson = personRepository.findById(person.getUuid());
-
+  @ParameterizedTest
+  @ArgumentsSource(PersonEntityProviderTests.class)
+  void shouldConvertOptionalPersonToPersonEntity(Person person) throws PersonNotFoundException {
+    Optional<Person> optionalPerson = Optional.of(person);
     Person personConverted = PersonConvert.convertOptional(optionalPerson);
 
-    assertEquals("Murilo Alves", personConverted.getFullName());
-    assertEquals("1995-01-21", personConverted.getBirthDate().toString());
-    assertEquals(person.getUuid(), personConverted.getUuid());
-
-    personRepository.deleteAll();
-
+    asserts(personConverted.getFullName(), personConverted.getBirthDate().toString(),
+        personConverted.getIdentifier());
   }
 
-  @Test
-  public void shouldConvertPersonEntityToPersonDataTransferObject() {
-    Person person = persistPerson();
-
+  @ParameterizedTest
+  @ArgumentsSource(PersonEntityProviderTests.class)
+  void shouldConvertPersonEntityToPersonDataTransferObject(Person person) {
     PersonDataTransferObject personDataTransferObject = PersonConvert.convertToPatternDTO(person);
 
-    assertEquals("Murilo Alves", personDataTransferObject.getFullName());
-    assertEquals("1995-01-21", personDataTransferObject.getBirthDate().toString());
-
-    personRepository.deleteAll();
+    asserts(personDataTransferObject.getFullName(),
+        personDataTransferObject.getBirthDate().toString(),
+        personDataTransferObject.getIdentifier());
   }
 
-  private Person persistPerson() {
-    PersonDataTransferObject personDTO = new PersonDataTransferObject("Murilo Alves",
-        LocalDate.parse("1995-01-21").toString(), "88822");
-
-    Person person = PersonConvert.convert(personDTO);
-    return personRepository.saveAndFlush(person);
+  private void asserts(String fullName, String birthDate, String identifier) {
+    assertEquals(FULL_NAME, fullName);
+    assertEquals(BIRTH_DATE, birthDate);
+    assertEquals(IDENTIFIER, identifier);
   }
-
 }

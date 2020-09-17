@@ -1,120 +1,54 @@
 package br.com.crud.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import java.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit4.SpringRunner;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
-import br.com.crud.service.convert.PersonConvert;
+import br.com.crud.providers.PersonConstants;
+import br.com.crud.providers.PersonEntityProviderTests;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class PersonServiceTest {
+class PersonServiceTest implements PersonConstants {
 
-  @Autowired
-  private PersonService personService;
+  private PersonService service;
+  private PersonRepository repository;
+  private PersonDataTransferObject dto;
 
-  @Autowired
-  private PersonRepository personRepository;
-
-  private PageRequest pageRequest;
-
-  @Before
-  public void beforeCreatePageRequest() {
-    pageRequest = PageRequest.of(0, 5);
+  @BeforeEach
+  void beforeCreatePageRequest() {
+    this.repository = Mockito.spy(PersonRepository.class);
+    this.service = new PersonServiceImpl(this.repository);
+    this.dto =
+        PersonDataTransferObject.newBuilder().birthDate(LocalDate.parse(BIRTH_DATE).toString())
+            .identifier(IDENTIFIER).fullName(FULL_NAME).build();
   }
 
-  @Test
-  public void shouldFindAll() {
-    assertEquals(0, personRepository.findAll(pageRequest).getContent().size());
+  @ParameterizedTest
+  @ArgumentsSource(PersonEntityProviderTests.class)
+  void shouldSavePerson(Person person) {
 
-    persistPerson();
-    persistPerson();
+    BDDMockito.given(this.repository.saveAndFlush(person)).willReturn(person);
 
-    assertEquals(2, personRepository.findAll(pageRequest).getContent().size());
-    assertEquals(2, personService.findAll(pageRequest).getContent().size());
+    this.service.save(this.dto);
 
-    personRepository.deleteAll();
+    BDDMockito.verify(this.repository, times(1)).saveAndFlush(any(Person.class));
   }
 
-  @Test
-  public void shouldDelete() {
-    assertEquals(0, personRepository.findAll().size());
+  @ParameterizedTest
+  @ArgumentsSource(PersonEntityProviderTests.class)
+  void shouldFindPersonByIdentifier(Person person) {
+    BDDMockito.given(this.repository.findByIdentifier(IDENTIFIER)).willReturn(Optional.of(person));
 
-    Person person = persistPerson();
+    this.service.find(IDENTIFIER);
 
-    assertEquals(1, personRepository.findAll().size());
-
-    personService.delete(person.getUuid().toString());
-
-    assertEquals(0, personRepository.findAll().size());
-
-    personRepository.deleteAll();
-  }
-
-  @Test
-  public void shouldUpdatePersonByPersonDTOAndUUID() {
-    Person person = persistPerson();
-    person.setFullName("Murilo Batista");
-
-    PersonDataTransferObject personDTO = PersonConvert.convertToPatternDTO(person);
-
-    personService.update(person.getUuid().toString(), personDTO);
-
-    Person personUpdate = personRepository.findById(person.getUuid()).get();
-
-    assertEquals("Murilo Batista", personUpdate.getFullName());
-
-    personRepository.deleteAll();
-  }
-
-  @Test
-  public void shouldFindPersonByUUID() {
-    Person person = persistPerson();
-
-    PersonDataTransferObject personDTO = personService.find(person.getUuid().toString());
-
-    assertEquals(person.getBirthDate().toString(), personDTO.getBirthDate());
-    assertEquals(person.getFullName(), personDTO.getFullName());
-
-    personRepository.deleteAll();
-  }
-
-  @Test
-  public void shouldSavePerson() {
-    assertEquals(0, personRepository.findAll().size());
-
-    PersonDataTransferObject personDataTransferObject = createObjectPersonDTO();
-    personService.save(personDataTransferObject);
-
-    assertEquals(1, personRepository.findAll().size());
-
-    Person person = personRepository.findAll().get(0);
-
-    assertEquals(personDataTransferObject.getFullName(), person.getFullName());
-    assertEquals(personDataTransferObject.getBirthDate(), person.getBirthDate().toString());
-
-    personRepository.deleteAll();
-  }
-
-  private PersonDataTransferObject createObjectPersonDTO() {
-    return new PersonDataTransferObject("Murilo Alves", LocalDate.parse("2019-01-21").toString(),
-        "88822");
-  }
-
-  private Person persistPerson() {
-    PersonDataTransferObject personDTO = new PersonDataTransferObject("Murilo Alves",
-        LocalDate.parse("1995-01-21").toString(), "88822");
-
-    Person person = PersonConvert.convert(personDTO);
-    return personRepository.saveAndFlush(person);
+    BDDMockito.verify(this.repository, times(1)).findByIdentifier(IDENTIFIER);
   }
 
 }
