@@ -9,15 +9,14 @@ import br.com.crud.domain.model.Person;
 import br.com.crud.domain.repository.PersonRepository;
 import br.com.crud.dto.PersonDataTransferObject;
 import br.com.crud.service.convert.PersonConvert;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Service
 public class PersonServiceImpl implements PersonService {
 
   private PersonRepository personRepository;
-
-  public PersonServiceImpl(PersonRepository personRepository) {
-    this.personRepository = personRepository;
-  }
 
   @Override
   public PersonDataTransferObject save(PersonDataTransferObject personDTO) {
