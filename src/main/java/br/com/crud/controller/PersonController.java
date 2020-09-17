@@ -26,7 +26,7 @@ public class PersonController {
   @Autowired
   private PersonService personService;
 
-  @PostMapping("save")
+  @PostMapping("/")
   public ResponseEntity<PersonDataTransferObject> save(
       @Validated @RequestBody PersonDataTransferObject personDTO) {
     personService.save(personDTO);
@@ -35,24 +35,24 @@ public class PersonController {
         .build();
   }
 
-  @GetMapping("find/{identifier}")
+  @GetMapping("/{identifier}")
   public ResponseEntity<PersonDataTransferObject> find(
       @PathVariable(name = "identifier") String identifier) {
     return ResponseEntity.ok(personService.find(identifier));
   }
 
-  @GetMapping("find")
+  @GetMapping("/")
   public ResponseEntity<Page<PersonDataTransferObject>> findAll(Pageable pageable) {
     return ResponseEntity.ok(personService.findAll(pageable));
   }
 
-  @DeleteMapping("delete/{identifier}")
+  @DeleteMapping("/{identifier}")
   public ResponseEntity<Void> delete(@PathVariable(name = "identifier") String uuid) {
     personService.delete(uuid);
     return ResponseEntity.noContent().build();
   }
 
-  @PutMapping("update/{identifier}")
+  @PutMapping("/{identifier}")
   public ResponseEntity<Void> update(
       @PathVariable(name = "identifier", required = true) String uuid,
       @Validated @RequestBody PersonDataTransferObject personDTO) {
